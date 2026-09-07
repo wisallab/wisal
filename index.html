@@ -42,8 +42,19 @@
   <a class="btn" id="go" href="#" style="display:none">دلته ټک وکړئ</a>
 </div>
 <script>
-var RAW = "https://gist.githubusercontent.com/wisallab/c5284689daebc10072b9c856ff4d4a3b/raw/wisal-url.json";
-var path = location.hash.replace(/^#/, "") || "/signup";
+var RAW  = "https://gist.githubusercontent.com/wisallab/c5284689daebc10072b9c856ff4d4a3b/raw/wisal-url.json";
+var REPO = "wisal";
+
+/* مسير: /wisal/signup  يا  /wisal/#/signup  — دواړه کار کوي */
+var path = location.hash.replace(/^#/, "");
+if(!path){
+  var p = location.pathname;
+  var i = p.indexOf("/" + REPO);
+  if(i >= 0) p = p.slice(i + REPO.length + 1);
+  path = p.replace(/\/index\.html$/, "").replace(/\/$/, "");
+}
+if(!path || path === "/") path = "/signup";
+path += location.search;
 
 function fail(){
   document.getElementById("msg").textContent = "اړيکه ونه شوه";
