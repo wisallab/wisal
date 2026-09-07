@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>وصال ډېنټل ګروپ</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Tahoma,'Segoe UI',sans-serif;background:#0C1E2E;color:#fff;
+       direction:rtl;display:grid;place-items:center;min-height:100vh;padding:24px;
+       text-align:center}
+  .box{max-width:400px;width:100%}
+  .logo{width:74px;height:74px;border-radius:22px;background:#fff;color:#C0392B;
+        display:grid;place-items:center;font-size:34px;margin:0 auto 18px}
+  h1{font-size:23px;font-weight:900;margin-bottom:6px}
+  p{color:#9FBACB;font-size:14px;line-height:1.9}
+  .dots{margin:22px 0;display:flex;gap:7px;justify-content:center}
+  .dots i{width:10px;height:10px;border-radius:50%;background:#12B5A8;
+          animation:b 1.3s infinite}
+  .dots i:nth-child(2){animation-delay:.18s}
+  .dots i:nth-child(3){animation-delay:.36s}
+  @keyframes b{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+  a.btn{display:block;background:#12B5A8;color:#fff;text-decoration:none;
+        padding:13px;border-radius:13px;font-weight:800;margin-top:14px}
+  .err{background:rgba(255,90,110,.14);border:1px solid rgba(255,90,110,.4);
+       border-radius:13px;padding:15px;margin-top:16px;font-size:13.5px;line-height:1.9;
+       display:none}
+  .tel{display:block;margin-top:10px;color:#7FE3DC;font-weight:800;direction:ltr}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">&#129463;</div>
+  <h1>وصال ډېنټل ګروپ</h1>
+  <p id="msg">لابراتوار ته اړيکه نيول کيږي...</p>
+  <div class="dots" id="dots"><i></i><i></i><i></i></div>
+  <div class="err" id="err">
+    <b>لابراتوار اوس بند دی</b><br>
+    مهرباني وکړئ لږ وروسته بيا هڅه وکړئ، يا زنګ ووهئ.
+    <a class="tel" href="tel:0798279827">☎ 0798279827</a>
+  </div>
+  <a class="btn" id="go" href="#" style="display:none">دلته ټک وکړئ</a>
+</div>
+<script>
+var RAW  = "https://gist.githubusercontent.com/wisallab/c5284689daebc10072b9c856ff4d4a3b/raw/wisal-url.json";
+var REPO = "wisal";
+
+/* مسير: /wisal/signup  يا  /wisal/#/signup  — دواړه کار کوي */
+var path = location.hash.replace(/^#/, "");
+if(!path){
+  var p = location.pathname;
+  var i = p.indexOf("/" + REPO);
+  if(i >= 0) p = p.slice(i + REPO.length + 1);
+  path = p.replace(/\/index\.html$/, "").replace(/\/$/, "");
+}
+if(!path || path === "/") path = "/signup";
+path += location.search;
+
+function fail(){
+  document.getElementById("msg").textContent = "اړيکه ونه شوه";
+  document.getElementById("dots").style.display = "none";
+  document.getElementById("err").style.display = "block";
+}
+
+fetch(RAW + "?t=" + Date.now(), {cache: "no-store"})
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if(!d.url) return fail();
+    var target = d.url.replace(/\/$/, "") + path;
+    var go = document.getElementById("go");
+    go.href = target;
+    go.style.display = "block";
+    document.getElementById("msg").textContent = "ورلېږدول کيږي...";
+    location.replace(target);
+  })
+  .catch(fail);
+</script>
+</body>
+</html>
